@@ -2,16 +2,45 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="theme-color" content="#1565C0">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Urlaubs-Buddy">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
 <title>Urlaubs-Buddy</title>
+<script>
+// ── Automatische Weiterleitung & Installations-Prüfung ──
+(function() {
+  var proto = window.location.protocol;
+  var host  = window.location.hostname;
+
+  // Szenario 1: Läuft bereits auf GitHub Pages → alles gut
+  if (host === 'urlaubs-buddy.github.io') {
+    return; // nichts tun
+  }
+
+  // Szenario 2: Läuft lokal (file://) → sofort weiterleiten
+  if (proto === 'file:') {
+    window.location.replace('https://urlaubs-buddy.github.io/urlaubs-buddy/');
+    return;
+  }
+
+  // Szenario 3: Läuft auf anderem Server (http/https aber nicht GitHub)
+  // → Hinweis zeigen nach dem Laden
+  if (proto === 'http:' || proto === 'https:') {
+    window.addEventListener('DOMContentLoaded', function() {
+      var div = document.createElement('div');
+      div.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;'
+        + 'background:#c62828;color:white;text-align:center;padding:10px 14px;'
+        + 'font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.3);';
+      div.innerHTML = '<b>&#9888; Die App wurde nicht vollst&#228;ndig installiert!</b><br>'
+        + 'Bitte diese Adresse in Ihrem Browser aufrufen oder als Lesezeichen speichern:<br>'
+        + '<a href="https://urlaubs-buddy.github.io/urlaubs-buddy/" style="color:yellow;font-size:13px;" target="_blank">https://urlaubs-buddy.github.io/urlaubs-buddy/</a>'
+        + '<button onclick="window.location.href=\'https://urlaubs-buddy.github.io/urlaubs-buddy/\'" '
+        + 'style="margin-left:10px;padding:4px 12px;background:white;color:#c62828;'
+        + 'border:none;border-radius:5px;font-weight:700;cursor:pointer;font-size:11px;">'
+        + 'Jetzt aufrufen</button>';
+      document.body.appendChild(div);
+    });
+  }
+})();
+</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;background:#e0f7fa;font-family:Arial,sans-serif;overflow:hidden}
@@ -2172,16 +2201,6 @@ document.addEventListener('DOMContentLoaded', function() {
   var rinp=document.getElementById('reise-file-inp');
   if(rinp)rinp.addEventListener('change',function(){var file=this.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(ev){try{Object.assign(UB_DATA,JSON.parse(ev.target.result));ubSave();headerAktualisieren();setupLaden();gruppeZeigen();alert('✅ Daten geladen!');}catch(err){alert('Fehler: '+err.message);}};reader.readAsText(file);});
 });
-</script>
-
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/sw.js')
-      .then(function(reg) { console.log('SW registered'); })
-      .catch(function(e) { console.log('SW error:', e); });
-  });
-}
 </script>
 </body>
 </html>
