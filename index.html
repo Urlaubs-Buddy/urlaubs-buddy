@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
 <title>Urlaubs-Buddy</title>
 <script>
-// ── Automatische Weiterleitung & Installations- Prüfung ──
+// ── Automatische Weiterleitung & Installations-Prüfung ──
 (function() {
   var proto = window.location.protocol;
   var host  = window.location.hostname;
@@ -496,8 +496,15 @@ input[type=text],input[type=tel],input[type=date],input[type=time],select,textar
         <div class="fototext-foto-row">
           <img id="ft-prev-unt" class="fototext-prev" alt="Foto">
           <div>
-            <label class="fototext-foto-label" for="ft-inp-unt">&#128247; Foto ausw&auml;hlen</label>
+            <label class="fototext-foto-label" for="ft-inp-unt">&#128247; Galerie</label>
             <input type="file" id="ft-inp-unt" accept="image/*" style="display:none;"
+              onchange="ftFotoLaden('unt')">
+            <label class="fototext-foto-label" for="ft-cam-unt"
+              style="background:#e8f5e9;border-color:#2e7d32;color:#2e7d32;margin-top:4px;">
+              &#128247; Kamera
+            </label>
+            <input type="file" id="ft-cam-unt" accept="image/*"
+              capture="environment" style="display:none;"
               onchange="ftFotoLaden('unt')">
             <button class="fototext-foto-del" id="ft-del-unt"
               onclick="ftFotoDel('unt')">&#10005; Foto l&ouml;schen</button>
@@ -533,8 +540,15 @@ input[type=text],input[type=tel],input[type=date],input[type=time],select,textar
         <div class="fototext-foto-row">
           <img id="ft-prev-std" class="fototext-prev" alt="Foto">
           <div>
-            <label class="fototext-foto-label" for="ft-inp-std">&#128247; Foto ausw&auml;hlen</label>
+            <label class="fototext-foto-label" for="ft-inp-std">&#128247; Galerie</label>
             <input type="file" id="ft-inp-std" accept="image/*" style="display:none;"
+              onchange="ftFotoLaden('std')">
+            <label class="fototext-foto-label" for="ft-cam-std"
+              style="background:#e8f5e9;border-color:#2e7d32;color:#2e7d32;margin-top:4px;">
+              &#128247; Kamera
+            </label>
+            <input type="file" id="ft-cam-std" accept="image/*"
+              capture="environment" style="display:none;"
               onchange="ftFotoLaden('std')">
             <button class="fototext-foto-del" id="ft-del-std"
               onclick="ftFotoDel('std')">&#10005; Foto l&ouml;schen</button>
@@ -570,8 +584,15 @@ input[type=text],input[type=tel],input[type=date],input[type=time],select,textar
         <div class="fototext-foto-row">
           <img id="ft-prev-umb" class="fototext-prev" alt="Foto">
           <div>
-            <label class="fototext-foto-label" for="ft-inp-umb">&#128247; Foto ausw&auml;hlen</label>
+            <label class="fototext-foto-label" for="ft-inp-umb">&#128247; Galerie</label>
             <input type="file" id="ft-inp-umb" accept="image/*" style="display:none;"
+              onchange="ftFotoLaden('umb')">
+            <label class="fototext-foto-label" for="ft-cam-umb"
+              style="background:#e8f5e9;border-color:#2e7d32;color:#2e7d32;margin-top:4px;">
+              &#128247; Kamera
+            </label>
+            <input type="file" id="ft-cam-umb" accept="image/*"
+              capture="environment" style="display:none;"
               onchange="ftFotoLaden('umb')">
             <button class="fototext-foto-del" id="ft-del-umb"
               onclick="ftFotoDel('umb')">&#10005; Foto l&ouml;schen</button>
