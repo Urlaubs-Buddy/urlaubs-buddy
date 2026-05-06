@@ -311,7 +311,7 @@ input[type=text],input[type=tel],input[type=date],input[type=time],select,textar
     <div class="nav"><button onclick="zeige('menu')">&larr; Men&uuml;</button><h2>&#128101; Mitreisende</h2><button onclick="zeige('menu')">Men&uuml; &rarr;</button></div>
     <div class="pbody" style="gap:5px;">
       <div class="sec"><div style="display:flex;gap:6px;"><input type="text" id="m-vorname" placeholder="Vorname"><input type="text" id="m-nachname" placeholder="Nachname"></div>
-        <input type="date" id="m-geburt" style="margin-top:4px;">
+        <input type="text" id="m-geburt" placeholder="z.B. 07.11.2015" style="margin-top:4px;max-width:160px;">
         <input type="text" id="m-strasse" placeholder="Stra&szlig;e + Nr." style="margin-top:4px;">
         <div style="display:flex;gap:6px;margin-top:4px;"><input type="text" id="m-plz" placeholder="PLZ" style="max-width:90px;"><input type="text" id="m-ort" placeholder="Ort"></div>
         <input type="text" id="m-notfall" placeholder="Notfallkontakt (Name + Tel.)" style="margin-top:4px;">
@@ -622,8 +622,9 @@ input[type=text],input[type=tel],input[type=date],input[type=time],select,textar
       <button onclick="zeige('menu')">Men&uuml; &rarr;</button>
     </div>
     <div class="aus-tab-bar">
-      <button class="aus-tab aktiv" id="ausbtn-neu"   onclick="ausTab('neu')">&#10010; Eintrag</button>
-      <button class="aus-tab"       id="ausbtn-liste" onclick="ausTab('liste')">&#128203; Liste</button>
+      <button class="aus-tab aktiv" id="ausbtn-neu"    onclick="ausTab('neu')">&#10010; Eintrag</button>
+      <button class="aus-tab"       id="ausbtn-liste"  onclick="ausTab('liste')">&#128203; Liste</button>
+      <button class="aus-tab"       id="ausbtn-konten" onclick="ausTab('konten')">&#128100; Konten</button>
       <button class="aus-tab"       id="ausbtn-gesamt" onclick="ausTab('gesamt')">&#9989; Gesamt</button>
     </div>
 
@@ -631,55 +632,40 @@ input[type=text],input[type=tel],input[type=date],input[type=time],select,textar
     <div id="aus-neu" class="aus-body aktiv">
       <div class="aus-sec">
         <div class="aus-sec-title">&#128176; Neuer Ausgaben-Eintrag</div>
-
-        <!-- Zeile 1: Datum + Beschreibung -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;">
-          <div>
-            <label class="lbl">Datum</label>
-            <input type="date" id="aus-datum" style="padding:4px 6px;font-size:11px;">
-          </div>
-          <div>
-            <label class="lbl">Beschreibung</label>
-            <input type="text" id="aus-beschr" placeholder="z.B. Restaurant, Taxi..." style="padding:4px 6px;font-size:11px;">
-          </div>
+          <div><label class="lbl">Datum</label>
+            <input type="date" id="aus-datum" style="padding:4px 6px;font-size:11px;"></div>
+          <div><label class="lbl">Beschreibung</label>
+            <input type="text" id="aus-beschr" placeholder="z.B. Restaurant, Taxi..." style="padding:4px 6px;font-size:11px;"></div>
         </div>
-
-        <!-- Zeile 2: Betrag + Kategorie -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:5px;">
-          <div>
-            <label class="lbl">Betrag (&euro;)</label>
-            <input type="number" id="aus-betrag" placeholder="0.00" step="0.01" min="0" style="padding:4px 6px;font-size:11px;">
-          </div>
-          <div>
-            <label class="lbl">Kategorie</label>
+          <div><label class="lbl">Betrag (&euro;)</label>
+            <input type="number" id="aus-betrag" placeholder="0.00" step="0.01" min="0" style="padding:4px 6px;font-size:11px;"></div>
+          <div><label class="lbl">Kategorie</label>
             <select id="aus-kat" style="padding:4px 6px;font-size:11px;">
               <option value="Essen">&#127374; Essen &amp; Trinken</option>
               <option value="Transport">&#128652; Transport</option>
               <option value="Unterkunft">&#127976; Unterkunft</option>
-              <option value="Eintritt">&#127981; Eintritt / Aktivit&auml;t</option>
-              <option value="Einkauf">&#128717; Einkauf / Souvenirs</option>
+              <option value="Eintritt">&#127981; Eintritt</option>
+              <option value="Einkauf">&#128717; Einkauf</option>
               <option value="Gesundheit">&#127973; Gesundheit</option>
               <option value="Sonstiges">&#128196; Sonstiges</option>
-            </select>
-          </div>
+            </select></div>
         </div>
 
-        <!-- Zeile 3: Bezahlt von (Freitext) -->
-        <div style="margin-top:5px;">
-          <label class="lbl">Bezahlt von</label>
-          <input type="text" id="aus-von" placeholder="z.B. Achim Wegner" style="padding:4px 6px;font-size:11px;">
+        <!-- Zahler auswählen -->
+        <label class="lbl">Bezahlt von (Zahler)</label>
+        <input type="text" id="aus-von" placeholder="z.B. Achim Wegner" style="padding:4px 6px;font-size:11px;">
+        <div id="aus-tn-gruppe" class="gruppe-liste" style="justify-content:flex-start;margin-top:4px;">
+          <span style="color:#bbb;font-size:11px;font-style:italic;">Keine Mitreisenden</span>
         </div>
 
-        <!-- Zeile 4: Mitreisende als Zahler -->
-        <div style="margin-top:6px;">
-          <label class="lbl" style="margin-bottom:4px;display:block;">
-            Mitreisende ausw&auml;hlen &rarr; als Zahler &uuml;bernehmen
-          </label>
-          <div id="aus-tn-gruppe" class="gruppe-liste" style="justify-content:flex-start;">
-            <span style="color:#bbb;font-size:11px;font-style:italic;">Keine Mitreisenden vorhanden</span>
-          </div>
-        </div>
-
+        <!-- Schuldner auswählen -->
+        <label class="lbl" style="margin-top:6px;display:block;">
+          Wer zahlt Anteil? (mehrere w&auml;hlbar)
+        </label>
+        <div id="aus-schuldner-gruppe" class="gruppe-liste" style="justify-content:flex-start;margin-top:4px;"></div>
+        <div id="aus-schuldner-info" style="font-size:10px;color:#1565C0;margin-top:3px;"></div>
       </div>
       <button onclick="ausHinzufuegen()"
         style="flex-shrink:0;width:100%;padding:9px;background:#1565C0;color:white;
@@ -696,9 +682,15 @@ input[type=text],input[type=tel],input[type=date],input[type=time],select,textar
       </div>
       <div class="aus-sec" style="flex:1;overflow-y:auto;min-height:0;">
         <div class="aus-sec-title">&#128203; Alle Eintr&auml;ge</div>
-        <div id="aus-eintraege">
-          <span style="color:#bbb;font-size:11px;font-style:italic;">Noch keine Eintr&auml;ge</span>
-        </div>
+        <div id="aus-eintraege"><span style="color:#bbb;font-size:11px;font-style:italic;">Noch keine Eintr&auml;ge</span></div>
+      </div>
+    </div>
+
+    <!-- Tab: Konten -->
+    <div id="aus-konten" class="aus-body">
+      <div class="aus-sec" style="flex:1;overflow-y:auto;min-height:0;">
+        <div class="aus-sec-title">&#128100; Konten &amp; Schulden</div>
+        <div id="aus-konten-liste"><span style="color:#bbb;font-size:11px;">Keine Eintr&auml;ge</span></div>
       </div>
     </div>
 
@@ -1528,63 +1520,95 @@ function ftFotoDel(sfx) {
 }
 
 // ── Ausgaben ──────────────────────────────────────────
+var _ausSchuldner = []; // selected payer shares
+
 function ausOeffnen() {
-  // Tagesdatum vorausfüllen
-  var d = new Date();
-  var pad = function(n){return n<10?'0'+n:n;};
+  var d = new Date(), pad = function(n){return n<10?'0'+n:n;};
   var heute = d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
   var datEl = document.getElementById('aus-datum');
   if (datEl && !datEl.value) datEl.value = heute;
-  // Mitreisende laden
+  _ausSchuldner = [];
   ausTnGruppeZeigen();
+  ausSchuldnerGruppeZeigen();
 }
 
 function ausTnGruppeZeigen() {
-  var box   = document.getElementById('aus-tn-gruppe');
+  var box = document.getElementById('aus-tn-gruppe');
   var liste = mitLaden();
   if (!box) return;
   box.innerHTML = '';
   if (!liste.length) {
-    box.innerHTML = '<span style="color:#bbb;font-size:11px;font-style:italic;">Keine Mitreisenden vorhanden</span>';
+    box.innerHTML = '<span style="color:#bbb;font-size:11px;font-style:italic;">Keine Mitreisenden</span>';
     return;
   }
   liste.forEach(function(p) {
     var div = document.createElement('div');
     div.className = 'gruppe-person';
-    div.title = p.vorname + ' ' + p.nachname;
     div.onclick = function() {
       document.getElementById('aus-von').value = p.vorname + ' ' + p.nachname;
-      // Highlight selected
       box.querySelectorAll('.gruppe-person').forEach(function(d){ d.classList.remove('aktiv'); });
       div.classList.add('aktiv');
     };
-    if (p.foto) {
-      var img = document.createElement('img');
-      img.src = p.foto;
-      div.appendChild(img);
-    } else {
-      var ini = document.createElement('div');
-      ini.className = 'ini';
-      ini.textContent = (p.vorname.charAt(0)+p.nachname.charAt(0)).toUpperCase();
-      div.appendChild(ini);
-    }
-    var nm = document.createElement('div');
-    nm.className = 'pname';
-    nm.textContent = p.vorname;
-    div.appendChild(nm);
+    if (p.foto) { var img=document.createElement('img'); img.src=p.foto; div.appendChild(img); }
+    else { var ini=document.createElement('div'); ini.className='ini'; ini.textContent=(p.vorname.charAt(0)+p.nachname.charAt(0)).toUpperCase(); div.appendChild(ini); }
+    var nm=document.createElement('div'); nm.className='pname'; nm.textContent=p.vorname; div.appendChild(nm);
     box.appendChild(div);
   });
 }
 
+function ausSchuldnerGruppeZeigen() {
+  var box = document.getElementById('aus-schuldner-gruppe');
+  var info = document.getElementById('aus-schuldner-info');
+  var liste = mitLaden();
+  if (!box) return;
+  box.innerHTML = '';
+  if (!liste.length) {
+    box.innerHTML = '<span style="color:#bbb;font-size:11px;">Keine Mitreisenden</span>';
+    return;
+  }
+  liste.forEach(function(p) {
+    var div = document.createElement('div');
+    div.className = 'gruppe-person';
+    var sel = _ausSchuldner.indexOf(p.id) >= 0;
+    if (sel) div.classList.add('aktiv');
+    div.onclick = function() {
+      var idx = _ausSchuldner.indexOf(p.id);
+      if (idx >= 0) { _ausSchuldner.splice(idx,1); div.classList.remove('aktiv'); }
+      else          { _ausSchuldner.push(p.id);    div.classList.add('aktiv'); }
+      ausSchuldnerInfo();
+    };
+    if (p.foto) { var img=document.createElement('img'); img.src=p.foto; div.appendChild(img); }
+    else { var ini=document.createElement('div'); ini.className='ini'; ini.textContent=(p.vorname.charAt(0)+p.nachname.charAt(0)).toUpperCase(); div.appendChild(ini); }
+    var nm=document.createElement('div'); nm.className='pname'; nm.textContent=p.vorname; div.appendChild(nm);
+    box.appendChild(div);
+  });
+  ausSchuldnerInfo();
+}
+
+function ausSchuldnerInfo() {
+  var info = document.getElementById('aus-schuldner-info');
+  if (!info) return;
+  var betrag = parseFloat(document.getElementById('aus-betrag').value) || 0;
+  if (_ausSchuldner.length && betrag > 0) {
+    var anteil = (betrag / _ausSchuldner.length).toFixed(2).replace('.',',');
+    info.textContent = _ausSchuldner.length + ' Person(en) gewählt — Anteil je: ' + anteil + ' €';
+  } else if (_ausSchuldner.length) {
+    info.textContent = _ausSchuldner.length + ' Person(en) gewählt';
+  } else {
+    info.textContent = 'Bitte Schuldner auswählen';
+  }
+}
+
 function ausTab(tab) {
-  ['neu','liste','gesamt'].forEach(function(t) {
-    var btn = document.getElementById('ausbtn-'+t);
-    var body = document.getElementById(t==='gesamt'?'aus-gesamt-tab':'aus-'+t);
+  ['neu','liste','konten','gesamt'].forEach(function(t) {
+    var btn  = document.getElementById('ausbtn-'+t);
+    var body = document.getElementById(t==='gesamt'?'aus-gesamt-tab':t==='konten'?'aus-konten':'aus-'+t);
     if (btn)  btn.classList.toggle('aktiv', t===tab);
     if (body) body.classList.toggle('aktiv', t===tab);
   });
   if (tab==='liste'||tab==='gesamt') ausListeZeigen();
-  if (tab==='neu') ausTnGruppeZeigen();
+  if (tab==='konten') ausKontenZeigen();
+  if (tab==='neu') { ausTnGruppeZeigen(); ausSchuldnerGruppeZeigen(); }
 }
 
 function ausHinzufuegen() {
@@ -1596,67 +1620,127 @@ function ausHinzufuegen() {
   if (!beschr) { alert('Bitte Beschreibung eintragen!'); return; }
   if (isNaN(betrag)||betrag<=0) { alert('Bitte gültigen Betrag eintragen!'); return; }
   if (!UB_DATA.ausgaben) UB_DATA.ausgaben=[];
+
+  // Calculate shares
+  var anteil = _ausSchuldner.length > 0 ? betrag / _ausSchuldner.length : 0;
+  var schuldner = _ausSchuldner.slice(); // copy
+
   UB_DATA.ausgaben.push({
     id: Date.now(), datum: datum, beschr: beschr,
-    betrag: betrag, kat: kat, von: von
+    betrag: betrag, kat: kat, von: von,
+    schuldner: schuldner, anteil: anteil
   });
+
+  // Book to accounts
+  if (!UB_DATA.konten) UB_DATA.konten = {};
+  schuldner.forEach(function(pid) {
+    if (!UB_DATA.konten[pid]) UB_DATA.konten[pid] = 0;
+    UB_DATA.konten[pid] = Math.round((UB_DATA.konten[pid] + anteil) * 100) / 100;
+  });
+
   ubSave();
   document.getElementById('aus-beschr').value='';
   document.getElementById('aus-betrag').value='';
-  // Reset zahler highlight
-  var box = document.getElementById('aus-tn-gruppe');
-  if (box) box.querySelectorAll('.gruppe-person').forEach(function(d){ d.classList.remove('aktiv'); });
   document.getElementById('aus-von').value='';
-  // Set today again
+  _ausSchuldner = [];
   var d2=new Date(), pad=function(n){return n<10?'0'+n:n;};
   document.getElementById('aus-datum').value=d2.getFullYear()+'-'+pad(d2.getMonth()+1)+'-'+pad(d2.getDate());
+  var box=document.getElementById('aus-tn-gruppe');
+  if(box) box.querySelectorAll('.gruppe-person').forEach(function(d){d.classList.remove('aktiv');});
+  ausSchuldnerGruppeZeigen();
   alert('✅ Eintrag gespeichert!');
 }
 
 function ausListeZeigen() {
   var liste = UB_DATA.ausgaben || [];
-  var box   = document.getElementById('aus-eintraege');
   var gesamt = liste.reduce(function(s,e){return s+e.betrag;},0);
-  var gv1 = document.getElementById('aus-gesamt-val');
-  var gv2 = document.getElementById('aus-gesamt-val2');
-  var gs  = gesamt.toFixed(2).replace('.',',') + ' &euro;';
-  if(gv1) gv1.innerHTML=gs;
-  if(gv2) gv2.innerHTML=gs;
-  if(!box) return;
-  if(!liste.length){
-    box.innerHTML='<span style="color:#bbb;font-size:11px;font-style:italic;">Noch keine Eintr\u00e4ge</span>';
-  } else {
-    // Sort by date desc
-    var sorted=[].concat(liste).sort(function(a,b){return b.id-a.id;});
-    box.innerHTML='';
-    sorted.forEach(function(e) {
-      var div=document.createElement('div');
-      div.className='aus-eintrag';
-      div.innerHTML='<span class="kat">'+e.kat+'</span>'+
-        '<span class="desc">'+(e.datum?e.datum+' ':'')+e.beschr+(e.von?' ('+e.von+')':'')+'</span>'+
-        '<span class="betrag">'+e.betrag.toFixed(2).replace('.',',')+'&euro;</span>'+
-        '<button onclick="ausLoeschen('+e.id+')">&#10006;</button>';
-      box.appendChild(div);
-    });
-  }
-  // Kategorie-Auswertung
+  var gv1=document.getElementById('aus-gesamt-val'), gv2=document.getElementById('aus-gesamt-val2');
+  var gs=gesamt.toFixed(2).replace('.',',')+' €';
+  if(gv1)gv1.innerHTML=gs; if(gv2)gv2.innerHTML=gs;
+  var box=document.getElementById('aus-eintraege');
+  if(!box)return;
+  if(!liste.length){box.innerHTML='<span style="color:#bbb;font-size:11px;font-style:italic;">Noch keine Einträge</span>';return;}
+  var sorted=[].concat(liste).sort(function(a,b){return b.id-a.id;});
+  box.innerHTML='';
+  var mitMap={};
+  mitLaden().forEach(function(p){mitMap[p.id]=p.vorname+' '+p.nachname;});
+  sorted.forEach(function(e){
+    var div=document.createElement('div');
+    div.className='aus-eintrag';
+    var schInfo='';
+    if(e.schuldner&&e.schuldner.length){
+      var namen=e.schuldner.map(function(id){return mitMap[id]||id;}).join(', ');
+      schInfo='<br><span style="font-size:9px;color:#888;">Anteil ('+e.anteil.toFixed(2).replace('.',',')+'€): '+namen+'</span>';
+    }
+    div.innerHTML='<span class="kat">'+e.kat+'</span>'+
+      '<span class="desc">'+(e.datum?e.datum+' ':'')+e.beschr+(e.von?' ('+e.von+')':'')+schInfo+'</span>'+
+      '<span class="betrag">'+e.betrag.toFixed(2).replace('.',',')+'€</span>'+
+      '<button onclick="ausLoeschen('+e.id+')">&#10006;</button>';
+    box.appendChild(div);
+  });
   var katbox=document.getElementById('aus-katlist');
-  if(katbox) {
+  if(katbox){
     var kats={};
     liste.forEach(function(e){kats[e.kat]=(kats[e.kat]||0)+e.betrag;});
     katbox.innerHTML='';
     Object.keys(kats).sort().forEach(function(k){
       var row=document.createElement('div');
       row.style.cssText='display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f0f0f0;font-size:12px;';
-      row.innerHTML='<span style="color:#1565C0;font-weight:700;">'+k+'</span><span style="font-weight:700;">'+kats[k].toFixed(2).replace('.',',')+'&euro;</span>';
+      row.innerHTML='<span style="color:#1565C0;font-weight:700;">'+k+'</span><span style="font-weight:700;">'+kats[k].toFixed(2).replace('.',',')+'€</span>';
       katbox.appendChild(row);
     });
-    if(!Object.keys(kats).length) katbox.innerHTML='<span style="color:#bbb;font-size:11px;font-style:italic;">Noch keine Eintr\u00e4ge</span>';
+    if(!Object.keys(kats).length) katbox.innerHTML='<span style="color:#bbb;font-size:11px;font-style:italic;">Noch keine Einträge</span>';
   }
 }
 
+function ausKontenZeigen() {
+  var box = document.getElementById('aus-konten-liste');
+  if (!box) return;
+  var konten = UB_DATA.konten || {};
+  var mitMap = {};
+  mitLaden().forEach(function(p){ mitMap[p.id] = {name:p.vorname+' '+p.nachname, foto:p.foto}; });
+  var keys = Object.keys(konten);
+  if (!keys.length) {
+    box.innerHTML='<span style="color:#bbb;font-size:11px;">Noch keine Schulden verbucht</span>';
+    return;
+  }
+  box.innerHTML='';
+  // Header
+  var hdr=document.createElement('div');
+  hdr.style.cssText='font-size:10px;color:#888;padding:4px 0;border-bottom:2px solid #e0f0ff;margin-bottom:4px;display:flex;justify-content:space-between;';
+  hdr.innerHTML='<span>Person</span><span>Schulden gesamt</span>';
+  box.appendChild(hdr);
+  keys.forEach(function(pid){
+    var p = mitMap[pid] || {name: pid, foto:null};
+    var betrag = konten[pid];
+    var row = document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f0f0f0;';
+    var ini='';
+    if(p.foto) ini='<img src="'+p.foto+'" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid #1565C0;flex-shrink:0;">';
+    else ini='<div style="width:32px;height:32px;border-radius:50%;background:#1565C0;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">'+p.name.charAt(0)+'</div>';
+    row.innerHTML=ini+
+      '<span style="flex:1;font-size:12px;font-weight:700;">'+p.name+'</span>'+
+      '<span style="font-size:13px;font-weight:700;color:'+(betrag>0?'#c62828':'#2e7d32')+';">'+
+        betrag.toFixed(2).replace('.',',')+' €</span>'+
+      '<button onclick="ausKontoBegleichen(\'' + pid + '\')" '+
+        'style="padding:3px 8px;background:#2e7d32;color:white;border:none;border-radius:5px;font-size:10px;cursor:pointer;">'+
+        'Beglichen</button>';
+    box.appendChild(row);
+  });
+}
+
+function ausKontoBegleichen(pid) {
+  var mitMap={};
+  mitLaden().forEach(function(p){mitMap[p.id]=p.vorname+' '+p.nachname;});
+  var name=mitMap[pid]||pid;
+  if(!confirm(name+' hat seinen Anteil bezahlt — Konto auf 0 setzen?'))return;
+  if(UB_DATA.konten) UB_DATA.konten[pid]=0;
+  ubSave();
+  ausKontenZeigen();
+}
+
 function ausLoeschen(id) {
-  if(!confirm('Eintrag l\u00f6schen?')) return;
+  if(!confirm('Eintrag löschen?'))return;
   UB_DATA.ausgaben=(UB_DATA.ausgaben||[]).filter(function(e){return e.id!==id;});
   ubSave(); ausListeZeigen();
 }
