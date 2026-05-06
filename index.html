@@ -840,15 +840,8 @@ input[type=text],input[type=tel],input[type=date],input[type=time],select,textar
       overflow-y:auto;background:white;border-bottom:2px solid #b2ebf2;">
     </div>
 
-    <!-- Karte: öffnet in neuem Tab -->
-    <div id="ort-karte-btn" style="display:none;flex-shrink:0;padding:5px 7px;
-      background:#e0f7fa;gap:5px;flex-direction:row;">
-      <button id="ort-karte-zeigen" onclick="ortKarteNeuTab()"
-        style="flex:1;padding:7px;background:#00838f;color:white;border:none;
-        border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;">
-        &#128506; Karte in neuem Tab anzeigen
-      </button>
-    </div>
+    <!-- Karte wird automatisch als Popup geöffnet -->
+    <div id="ort-karte-btn" style="display:none;"></div>
 
     <!-- Starthinweis -->
     <div id="ort-hint" style="flex:1;display:flex;flex-direction:column;
@@ -2162,23 +2155,30 @@ function ortListeZeigen(results) {
 
 var _kartePos = null;
 
+function ortKarteOeffnen(url) {
+  // Popup in App-Größe öffnen — schließen bringt zurück zur App
+  var w = 430, h = 820;
+  var left = Math.round((screen.width  - w) / 2);
+  var top  = Math.round((screen.height - h) / 2);
+  window.open(url, 'ub_karte',
+    'width='+w+',height='+h+',left='+left+',top='+top+
+    ',resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no');
+}
+
 function ortKarteZeigen(lat, lon, zoom, markers) {
   _kartePos = {lat:lat, lon:lon, zoom:zoom||15};
-  var btn  = document.getElementById('ort-karte-btn');
   var hint = document.getElementById('ort-hint');
-  if (btn)  btn.style.display  = 'flex';
   if (hint) hint.style.display = 'none';
+  // Automatisch Karte als Popup öffnen
+  var url = 'https://www.openstreetmap.org/?'
+    + 'mlat='+lat+'&mlon='+lon
+    + '#map='+zoom+'/'+lat+'/'+lon;
+  ortKarteOeffnen(url);
 }
 
 function ortKarteNeuTab() {
   if (!_kartePos) return;
-  var delta = 0.015 * Math.pow(2, 15 - _kartePos.zoom);
-  var bbox  = (_kartePos.lon-delta)+','+(_kartePos.lat-delta)+','
-            + (_kartePos.lon+delta)+','+(_kartePos.lat+delta);
-  var url = 'https://www.openstreetmap.org/?'
-    + 'mlat='+_kartePos.lat+'&mlon='+_kartePos.lon
-    + '#map='+_kartePos.zoom+'/'+_kartePos.lat+'/'+_kartePos.lon;
-  window.open(url, '_blank');
+  ortKarteZeigen(_kartePos.lat, _kartePos.lon, _kartePos.zoom, []);
 }
 
 function ortRoute(idx) {
