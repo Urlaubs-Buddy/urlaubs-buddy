@@ -234,18 +234,6 @@ input[type=text],input[type=tel],input[type=date],input[type=time],select,textar
 </head>
 <body>
 
-<!-- Karten-Overlay (fixed - works everywhere) -->
-<div id="ort-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;
-  z-index:9999;flex-direction:column;background:white;">
-  <div style="display:flex;align-items:center;justify-content:space-between;
-    padding:8px 12px;background:#1565C0;color:white;flex-shrink:0;">
-    <span style="font-size:13px;font-weight:700;" id="ort-overlay-titel">Karte</span>
-    <button onclick="ortOverlaySchliessen()"
-      style="padding:6px 16px;background:white;color:#1565C0;border:none;
-      border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;">
-      &#8592; Zur&uuml;ck zur App
-    </button>
-  </div>
   <iframe id="ort-overlay-frame" src="about:blank"
     style="flex:1;border:none;min-height:0;width:100%;height:100%;" allowfullscreen></iframe>
 </div>
@@ -856,9 +844,6 @@ input[type=text],input[type=tel],input[type=date],input[type=time],select,textar
     <div id="ort-liste" style="display:none;flex-shrink:0;max-height:200px;
       overflow-y:auto;background:white;border-bottom:2px solid #b2ebf2;">
     </div>
-
-    <!-- Karte wird automatisch als Popup geöffnet -->
-    <div id="ort-karte-btn" style="display:none;"></div>
 
     <!-- Starthinweis -->
     <div id="ort-hint" style="flex:1;display:flex;flex-direction:column;
@@ -2173,29 +2158,21 @@ function ortListeZeigen(results) {
 var _kartePos = null;
 
 function ortKarteOeffnen(url, titel) {
-  var overlay = document.getElementById('ort-overlay');
-  var frame   = document.getElementById('ort-overlay-frame');
-  var titelEl = document.getElementById('ort-overlay-titel');
-  if (!overlay || !frame) { window.open(url, '_blank'); return; }
-  if (titelEl) titelEl.textContent = titel || 'Karte';
-  frame.src = url;
-  overlay.style.display = 'flex';
-}
-
-function ortOverlaySchliessen() {
-  var overlay = document.getElementById('ort-overlay');
-  var frame   = document.getElementById('ort-overlay-frame');
-  if (overlay) overlay.style.display = 'none';
-  if (frame)   frame.src = 'about:blank';
+  // Karte in neuem Tab öffnen — App bleibt geöffnet
+  window.open(url, '_blank');
+  var status = document.getElementById('ort-status');
+  if (status) status.textContent = (titel||'Karte') + ' — wird in neuem Tab geöffnet';
 }
 
 function ortKarteZeigen(lat, lon, zoom, markers) {
   _kartePos = {lat:lat, lon:lon, zoom:zoom||15};
   var hint = document.getElementById('ort-hint');
   if (hint) hint.style.display = 'none';
-  var url = 'https://www.openstreetmap.org/?mlat='+lat+'&mlon='+lon+'#map='+(zoom||15)+'/'+lat+'/'+lon;
-  ortKarteOeffnen(url, '★ Karte');
+  // Karte-Button anzeigen
+  var btn = document.getElementById('ort-karte-btn');
+  if (btn) { btn.style.display='flex'; }
 }
+
 function ortKarteNeuTab() {
   if (!_kartePos) return;
   ortKarteZeigen(_kartePos.lat, _kartePos.lon, _kartePos.zoom, []);
